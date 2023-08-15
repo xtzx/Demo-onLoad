@@ -1,33 +1,43 @@
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
 const url = require('url');
 
+// http://localhost:3000/pic.jpg?delay=3000
+
 const server = http.createServer((req, res) => {
-    // 解析 URL，获取路径和查询参数
-    const { pathname, query } = url.parse(req.url, true);
+    const {pathname, query} = url.parse(req.url, true);
+    const delay = query.delay || 0;
+    const filePath = path.join(__dirname, '../public', pathname);
+    // const filePath = path.join('public', pathname);
+    console.log('filePath: ', filePath);
 
-    // 获取延迟时间，默认为0
-    const delay = parseInt(query.delay) || 0;
-
-    // 延迟发送响应
     setTimeout(() => {
-        // 读取请求的静态文件
-        fs.readFile(`.${pathname}`, (err, data) => {
+        fs.readFile(filePath, (err, data) => {
             if (err) {
-                // 处理文件不存在的情况
                 res.statusCode = 404;
                 res.end('File not found');
-            } else {
-                // 设置 Content-Type 根据需要自行调整
-                res.setHeader('Content-Type', 'text/html');
-                res.end(data);
+                return;
             }
+
+            let contentType = 'text/plain';
+
+            if (pathname.endsWith('.css')) {
+                contentType = 'text/css';
+            } else if (pathname.endsWith('.jpg') || pathname.endsWith('.jpeg')) {
+                contentType = 'image/jpeg';
+            } else if (pathname.endsWith('.png')) {
+                contentType = 'image/png';
+            } else if (pathname.endsWith('.js')) {
+                contentType = 'application/javascript';
+            }
+
+            res.setHeader('Content-Type', contentType);
+            res.end(data);
         });
     }, delay);
 });
 
-const port = 8000;
-
-server.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
+server.listen(3000, () => {
+    console.log('Server is running at http://localhost:3000/');
 });

@@ -6,12 +6,35 @@
         <title>Document</title>
     </head>
     <body>
-        <script src="http://localhost:3010/index.js?delay=1000" async></script>
+        <!-- <script src="http://localhost:3010/index.js?delay=1000" async></script> -->
 
-        <script>
+        <!-- <script>
             window.onload(function () {
                 console.log('script onload 触发');
             });
+        </script> -->
+
+        <!-- <script>
+            window.onload = function () {
+                alert('onload');
+            };
+
+            setTimeout(function () {
+                alert('timeout');
+            }, 0);
+        </script> -->
+
+        <script>
+            window.onload = function () {
+                alert('onload');
+            };
+
+            setTimeout(() => {
+                document.body.innerHTML = '<img src="http://localhost:3000/pic.jpg?delay=5000">';
+            }, 10);
+            // const img = document.createElement('img');
+            // 请求时长为0.5秒的图片资源
+            // img.src = 'http://localhost:3010/index.png?delay=500';
         </script>
     </body>
 </html>
